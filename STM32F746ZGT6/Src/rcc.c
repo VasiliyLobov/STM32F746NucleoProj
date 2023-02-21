@@ -43,7 +43,7 @@ void init_RCC(void)
     uint32_t pllcfgr = 0;
 
     pllcfgr |= RCC_PLLCFGR_PLLSRC_HSE; // Внешний резонатор используется для PLL
-    pllcfgr |= 25 << RCC_PLLCFGR_PLLM_Pos; // Деление на 5 для PLLM(сдвиг на маску заданную, в данном случае деление на M)
+    pllcfgr |= 25 << RCC_PLLCFGR_PLLM_Pos; // Деление на 25 для PLLM(сдвиг на маску заданную, в данном случае деление на M)
     pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 432 для PLLM(сдвиг на маску заданную, в данном случае умножение на N)
     pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Деление на 2 для PLLM(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
 
