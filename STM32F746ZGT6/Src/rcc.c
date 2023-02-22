@@ -52,10 +52,6 @@ void init_RCC(void)
      * записать нужное значение в регистр конфигурации PLL */
     RCC->PLLCFGR = pllcfgr; // Запись в регистр конфигурации PLL
 
-    /* Для настройки Latency смотри в Reference Manual Table 5. Number of wait states according to CPU clock (HCLK) frequency*/
-    // Настраиваем Latency на 7 для 216 МГц.
-    FLASH->ACR |= (7 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
-
     // Включение PLL.
     RCC->CR |= RCC_CR_PLLON; // Включение PLL
     while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
@@ -64,8 +60,16 @@ void init_RCC(void)
      * Over-drive mode: This mode allows the CPU and the core logic to operate at a
      * higher frequency than the normal mode for the voltage scaling scale 1 and scale 2 */
     // Для рыботы на частоте 216Мгц надо включить режим Over-Drive, иначе не сможем работать на максимальной частоте
-    PWR->CR1 |= PWR_CR1_ODEN;
-    PWR->CR1 |= PWR_CR1_ODSWEN;
+    PWR->CR1 |= PWR_CR1_ODEN; // Включаем овердрайв
+    while(!(PWR->CSR1 & PWR_CSR1_ODRDY)); // Ожидаем флаг включения овердрайва
+    PWR->CR1 |= PWR_CR1_ODSWEN; // Переключаем стабилизатор напряжения из нормального в режим овердрайв
+    while(!(PWR->CSR1 & PWR_CSR1_ODSWRDY)); // Ожидаем флаг переключения стабилизатора напряжения
+
+    /* Для настройки Latency смотри в Reference Manual Table 5. Number of wait states according to CPU clock (HCLK) frequency*/
+    // Настраиваем Latency на 7 для 216 МГц.
+    FLASH->ACR |= (7 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
+
+    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
 
     // Выбор PLL как основного источника тактирования.
     RCC->CFGR |= RCC_CFGR_SW_PLL;
