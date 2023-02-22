@@ -25,7 +25,7 @@ void init_RCC(void)
 
 //  return;
 
-    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable(for over-drive mode)
 
     // Включение внешнего тактового генератора.
 //    RCC->CR |= RCC_CR_HSEBYP; // Включение именно генератора внешнего, а не осцилятора внешнего

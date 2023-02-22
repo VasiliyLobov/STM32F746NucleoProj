@@ -180,7 +180,7 @@ void init_RCC(void)
 
 //  return;
 
-    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable(for over-drive mode)
  8000296:	4b29      	ldr	r3, [pc, #164]	; (800033c <init_RCC+0xe4>)
  8000298:	6c1b      	ldr	r3, [r3, #64]	; 0x40
  800029a:	4a28      	ldr	r2, [pc, #160]	; (800033c <init_RCC+0xe4>)
