@@ -24,8 +24,8 @@ void init_RCC(void)
 //    SystemCoreClockUpdate(); // Функция CMSIS для обновления тактирования
 
 //  return;
-
-    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable(for over-drive mode)
+    // Включение тактирования питания для включения режима овер-драйв
+//    RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable(for over-drive mode)
 
     // Включение внешнего тактового генератора.
 //    RCC->CR |= RCC_CR_HSEBYP; // Включение именно генератора внешнего, а не осцилятора внешнего
@@ -41,8 +41,12 @@ void init_RCC(void)
     while(RCC->CR & RCC_CR_PLLRDY); // Ожидание флага выключения PLL
 
     // Настройка предделителей для шин тактирования периферии.
-    // 1: делим на 2(AHBCLK = 64/2 = 32 MГц), 2: делим на 1(APBCLK1 = 32 MГц), 3: делим на 1(APBCLK2 = 32 MГц)
-    RCC->CFGR |= RCC_CFGR_HPRE_DIV2 | RCC_CFGR_PPRE1_DIV1 | RCC_CFGR_PPRE2_DIV1;
+    // 1: делим на 1(AHBCLK = 216 MГц), 2: делим на 4(APBCLK1 = 54 MГц), 3: делим на 1(APBCLK2 = 104 MГц)
+//    RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV4 | RCC_CFGR_PPRE2_DIV2;
+
+    // Настройка предделителей для шин тактирования периферии.
+    // 1: делим на 1(AHBCLK = 32 MГц), 2: делим на 1(APBCLK1 = 32 MГц), 3: делим на 1(APBCLK2 = 32 MГц)
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV1 | RCC_CFGR_PPRE2_DIV1;
 
     // Настройка предделителей PLL.
     uint32_t pllcfgr = 0;
