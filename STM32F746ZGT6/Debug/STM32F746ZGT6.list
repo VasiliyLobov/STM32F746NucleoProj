@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001b94e  00000000  00000000  000211e8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00001084  00000000  00000000  0003cb36  2**0
+ 17 .debug_line   00000fec  00000000  00000000  0003cb36  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0009b24f  00000000  00000000  0003dbba  2**0
+ 18 .debug_str    0009b23b  00000000  00000000  0003db22  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  000d8e09  2**0
+ 19 .comment      00000050  00000000  00000000  000d8d5d  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000000e8  00000000  00000000  000d8e5c  2**2
+ 20 .debug_frame  000000e8  00000000  00000000  000d8db0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -175,9 +175,9 @@ void init_RCC(void)
  8000290:	4b28      	ldr	r3, [pc, #160]	; (8000334 <init_RCC+0xdc>)
  8000292:	2200      	movs	r2, #0
  8000294:	625a      	str	r2, [r3, #36]	; 0x24
-//    RCC->CR |= RCC_CR_HSEBYP; // Включение именно генератора внешнего, а не осцилятора внешнего
-//    RCC->CR |= RCC_CR_HSEON; // Включение работы от внешнего генератора
-//    while(!(RCC->CR & RCC_CR_HSERDY)); // Ожидание флага, что внешний генератор готов
+    RCC->CR |= RCC_CR_HSEON; // Включение работы от внешнего генератора
+    while(!(RCC->CR & RCC_CR_HSERDY)); // Ожидание флага, что внешний генератор готов
+*/
 
     // Включение внутреннего резонатора HSI
     RCC->CR |= RCC_CR_HSION; // Включение работы от внутреннего резонатора
@@ -208,8 +208,8 @@ void init_RCC(void)
  80002c2:	f003 7300 	and.w	r3, r3, #33554432	; 0x2000000
  80002c6:	2b00      	cmp	r3, #0
  80002c8:	d1f9      	bne.n	80002be <init_RCC+0x66>
-    // 1: делим на 1(AHBCLK = 216 MГц), 2: делим на 4(APBCLK1 = 54 MГц), 3: делим на 1(APBCLK2 = 104 MГц)
-//    RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV4 | RCC_CFGR_PPRE2_DIV2;
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV4 | RCC_CFGR_PPRE2_DIV2;
+*/
 
     // Настройка предделителей для шин тактирования периферии.
     // 1: делим на 1(AHBCLK = 32 MГц), 2: делим на 1(APBCLK1 = 32 MГц), 3: делим на 1(APBCLK2 = 32 MГц)
@@ -223,9 +223,9 @@ void init_RCC(void)
     uint32_t pllcfgr = 0;
  80002d2:	2300      	movs	r3, #0
  80002d4:	607b      	str	r3, [r7, #4]
-//    pllcfgr |= 25 << RCC_PLLCFGR_PLLM_Pos; // Деление на 25 для PLL(сдвиг на маску заданную, в данном случае деление на M)
-//    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 432 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
-//    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Деление на 2 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 432 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
+    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Деление на 2 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+*/
 
     pllcfgr |= RCC_PLLCFGR_PLLSRC_HSI; // Внутренний резонатор используется для PLL
     pllcfgr |= 8 << RCC_PLLCFGR_PLLM_Pos; // Деление на 8 для PLL(сдвиг на маску заданную, в данном случае деление на M)
@@ -264,9 +264,9 @@ void init_RCC(void)
  8000306:	f003 7300 	and.w	r3, r3, #33554432	; 0x2000000
  800030a:	2b00      	cmp	r3, #0
  800030c:	d0f9      	beq.n	8000302 <init_RCC+0xaa>
-//    FLASH->ACR |= (7 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
 
 //    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
+*/
 
     // Настраиваем Latency на 1 для 32 МГц.
     FLASH->ACR |= (1 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash

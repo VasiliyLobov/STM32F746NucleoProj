@@ -62,8 +62,8 @@ all: main-build
 main-build: STM32F746ZGT6.elf secondary-outputs
 
 # Tool invocations
-STM32F746ZGT6.elf STM32F746ZGT6.map: $(OBJS) $(USER_OBJS) G:\STM32CubeIDE\workspace_1.11.2\STM32F746NucleoProj\STM32F746ZGT6\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32F746ZGT6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"G:\STM32CubeIDE\workspace_1.11.2\STM32F746NucleoProj\STM32F746ZGT6\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F746ZGT6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32F746ZGT6.elf STM32F746ZGT6.map: $(OBJS) $(USER_OBJS) D:\STM32CubeIDE\workspace_1.11.2\STM32F746ZGT6\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32F746ZGT6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"D:\STM32CubeIDE\workspace_1.11.2\STM32F746ZGT6\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F746ZGT6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
