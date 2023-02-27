@@ -1,109 +1,109 @@
-/* В данном файле можно настроить тактирование MCU как от внутреннего резонатора, так и от внешнего генератора, необходимо лишь закомментировать
- * одни строки, а другие раскомментировать*/
-// Смотри файл stm32f476xx.h для настройки RCC и PLL, а также STM32CubeMX, так как в нем удобно изображена структура настройки PLL
+/* In this file, you can configure the MCU HCLK clock from both the internal resonator and the external generator, you only
+ * need to comment out some lines, and uncomment others*/
+// See the stm32f476xx.h file for RCC and PLL tuning, and STM32CubeMX as it conveniently depicts the PLL tuning structure
 #include "stm32f7xx.h"
 
 #include "rcc.h"
 
 void init_RCC(void)
 {
-    // Сброс периферии.
-    RCC->AHB1RSTR = 0xFFFFFFFF; // Сброс
-    RCC->AHB1RSTR = 0x00000000; // Установка
+    // Reset Peripherals.
+    RCC->AHB1RSTR = 0xFFFFFFFF; // Reset AHB1 Peripherals
+    RCC->AHB1RSTR = 0x00000000; // Set AHB1 Peripherals
 
-    RCC->AHB2RSTR = 0xFFFFFFFF; // Сброс
-    RCC->AHB2RSTR = 0x00000000; // Установка
+    RCC->AHB2RSTR = 0xFFFFFFFF; // Reset AHB2 Peripherals
+    RCC->AHB2RSTR = 0x00000000; // Set AHB2 Peripherals
 
-    RCC->APB1RSTR = 0xFFFFFFFF; // Сброс
-    RCC->APB1RSTR = 0x00000000; // Установка
+    RCC->APB1RSTR = 0xFFFFFFFF; // Reset APB1 Peripherals
+    RCC->APB1RSTR = 0x00000000; // Set APB1 Peripherals
 
-    RCC->APB2RSTR = 0xFFFFFFFF; // Сброс
-    RCC->APB2RSTR = 0x00000000; // Установка
+    RCC->APB2RSTR = 0xFFFFFFFF; // Reset APB2 Peripherals
+    RCC->APB2RSTR = 0x00000000; // Set APB2 Peripherals
 
-    // Обновление переменной с частотой тактирования.
-//  SystemCoreClockUpdate(); // Функция CMSIS для обновления тактирования
+    // Update variable SystemCoreClockUpdate with clock rate.
+//  SystemCoreClockUpdate(); // CMSIS function for clock update
 
 //  return;
 
 /*
-    // Включение тактирования питания для включения режима овер-драйв
+    // Enabling Power Clock to Enable Over-drive Mode
     RCC->APB1ENR |= RCC_APB1ENR_PWREN; // Power interface clock enable(for over-drive mode)
 */
 
 /*
-    // Включение внешнего тактового генератора.
-    RCC->CR |= RCC_CR_HSEBYP; // Включение именно генератора внешнего, а не осцилятора внешнего
-    RCC->CR |= RCC_CR_HSEON; // Включение работы от внешнего генератора
-    while(!(RCC->CR & RCC_CR_HSERDY)); // Ожидание флага, что внешний генератор готов
+    // Enable external clock generator.
+    RCC->CR |= RCC_CR_HSEBYP; // First enable HSE Clock BYPAS and then HSE Clock
+    RCC->CR |= RCC_CR_HSEON; // Enable HSE clock
+    while(!(RCC->CR & RCC_CR_HSERDY)); // Waiting for the flag that the BYPAS is ready
 */
 
-    // Включение внутреннего резонатора HSI
-    RCC->CR |= RCC_CR_HSION; // Включение работы от внутреннего резонатора
-    while(!(RCC->CR & RCC_CR_HSIRDY)); // Ожидание флага, что внутренний резонатор готов
+    // Enable the internal resonator HSI
+    RCC->CR |= RCC_CR_HSION; // Enable HSI clock
+    while(!(RCC->CR & RCC_CR_HSIRDY)); // Waiting for the flag that the HSI Clock is ready
 
-    // Выключение PLL.
-    RCC->CR &= ~RCC_CR_PLLON; // Выключение PLL
-    while(RCC->CR & RCC_CR_PLLRDY); // Ожидание флага выключения PLL
+    // Reset PLL.
+    RCC->CR &= ~RCC_CR_PLLON; // Reseting PLL
+    while(RCC->CR & RCC_CR_PLLRDY); // Waiting for the flag PLLRDY that the PLL is unlocked
 
 /*
-    // Настройка предделителей для шин тактирования периферии.
-    // 1: делим на 1(AHBCLK = 216 MГц), 2: делим на 4(APBCLK1 = 54 MГц), 3: делим на 1(APBCLK2 = 104 MГц)
+    // Setting up prescalers for peripheral clock buses.
+    // 1: divide by 1(AHBCLK = 216 MHz), 2: divide by 4(APBCLK1 = 54 MHz), 3: divide by 1(APBCLK2 = 104 MHz)
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV4 | RCC_CFGR_PPRE2_DIV2;
 */
 
-    // Настройка предделителей для шин тактирования периферии.
-    // 1: делим на 1(AHBCLK = 32 MГц), 2: делим на 1(APBCLK1 = 32 MГц), 3: делим на 1(APBCLK2 = 32 MГц)
+    // Setting up prescalers for peripheral clock buses.
+    // 1: divide by 1(AHBCLK = 32 MHz), 2: divide by 1(APBCLK1 = 32 MHz), 3: divide by 1(APBCLK2 = 32 MHz)
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV1 | RCC_CFGR_PPRE2_DIV1;
 
-    // Настройка предделителей PLL.
+    // Setting up prescalers of PLL.
     uint32_t pllcfgr = 0;
 /*
-    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSE; // Внешний резонатор используется для PLL
-    pllcfgr |= 25 << RCC_PLLCFGR_PLLM_Pos; // Деление на 25 для PLL(сдвиг на маску заданную, в данном случае деление на M)
-    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 432 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
-    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Деление на 2 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSE; // External resonator used for PLL
+    pllcfgr |= 25 << RCC_PLLCFGR_PLLM_Pos; // Divide by 25 for PLL(shift by the given mask, in this case division by M)
+    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Multiply by 432 for PLL(shift by the given mask, in this case multiplication by N)
+    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Divide by 2 for PLL(shift by the given mask, in this case division by P), see Reference Manual
 */
 
-    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSI; // Внутренний резонатор используется для PLL
-    pllcfgr |= 8 << RCC_PLLCFGR_PLLM_Pos; // Деление на 8 для PLL(сдвиг на маску заданную, в данном случае деление на M)
-    pllcfgr |= 64 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 64 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
-    pllcfgr |= 1 << RCC_PLLCFGR_PLLP_Pos; // Деление на 4 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSI; // Internal resonator used for PLL
+    pllcfgr |= 8 << RCC_PLLCFGR_PLLM_Pos; // Divide by 8 for PLL(shift by the given mask, in this case division by M)
+    pllcfgr |= 64 << RCC_PLLCFGR_PLLN_Pos; // Multiply by 64 for PLL(shift by the given mask, in this case multiplication by N)
+    pllcfgr |= 1 << RCC_PLLCFGR_PLLP_Pos; // Divide by 4 for PLL(shift by the given mask, in this case division by P), see Reference Manual
 
 
-    /*Осуществляем запись в регистр конфигурации PLL не напрямую, так как заданное значение не равно нулю, данный регистр изанчально настроен
-     * на 16МГц [начальное значение не равно нулю(Reset value)], поэтому получится каша, если напрямую будем записывать значения делителей, для
-     * этого создали отдельную переменную, чтобы записать нужное значение в регистр конфигурации PLL */
-    RCC->PLLCFGR = pllcfgr; // Запись в регистр конфигурации PLL
+    /*We write to the PLL configuration register not directly, since the reset value is not equal to zero, this register is initially set
+     * to 16 MHz [the initial value is not equal to zero (Reset value)], so we get an incomprehensible value if we directly write the divisor
+     * values, for this we created a separate variable uint32_t pllcfgr to write the desired value to the PLL configuration register */
+    RCC->PLLCFGR = pllcfgr; // Writing to the PLL Configuration Register
 
-    // Включение PLL.
-    RCC->CR |= RCC_CR_PLLON; // Включение PLL
-    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
+    // Enable PLL.
+    RCC->CR |= RCC_CR_PLLON; // Enable PLL
+    while(!(RCC->CR & RCC_CR_PLLRDY)); // Waiting for the flag PLLRDY that the PLL is locked
 
-    /* Смотри даташит и reference manual на STM32F746ZGT
+    /* See datasheet and reference manual for STM32F746ZGT
      * Over-drive mode: This mode allows the CPU and the core logic to operate at a
      * higher frequency than the normal mode for the voltage scaling scale 1 and scale 2 */
 
 /*
-    // Для рыботы на частоте 216Мгц надо включить режим Over-Drive, иначе не сможем работать на максимальной частоте
-    PWR->CR1 |= PWR_CR1_ODEN; // Включаем овердрайв
-    while(!(PWR->CSR1 & PWR_CSR1_ODRDY)); // Ожидаем флаг включения овердрайва
-    PWR->CR1 |= PWR_CR1_ODSWEN; // Переключаем стабилизатор напряжения из нормального в режим овердрайв
-    while(!(PWR->CSR1 & PWR_CSR1_ODSWRDY)); // Ожидаем флаг переключения стабилизатора напряжения
+    // To work at a frequency of 216 MHz, you must enable the Over-drive mode, otherwise we will not be able to work at the maximum frequency
+    PWR->CR1 |= PWR_CR1_ODEN; // enable the Over-drive mode
+    while(!(PWR->CSR1 & PWR_CSR1_ODRDY)); // Waiting for over-drive enable flag
+    PWR->CR1 |= PWR_CR1_ODSWEN; // Switching the voltage regulator to over-drive mode
+    while(!(PWR->CSR1 & PWR_CSR1_ODSWRDY)); //Waiting for voltage regulator switch flag
 */
 
-    /* Для настройки Latency смотри в Reference Manual Table 5. Number of wait states according to CPU clock (HCLK) frequency*/
+    /* For latency settings, see Reference Manual Table 5. Number of wait states according to CPU clock (HCLK) frequency*/
 
 /*
-    // Настраиваем Latency на 7 для 216 МГц.
-//    FLASH->ACR |= (7 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
+    // Setting Latency on 7 for 216 MHz.
+//    FLASH->ACR |= (7 << FLASH_ACR_LATENCY_Pos); // Setting the timeout when reading from Flash
 
-//    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
+//    while(!(RCC->CR & RCC_CR_PLLRDY)); // Waiting for the flag PLLRDY that the PLL is locked
 */
 
-    // Настраиваем Latency на 1 для 32 МГц.
-    FLASH->ACR |= (1 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
+    // Setting Latency on 1 for 32 MHz.
+    FLASH->ACR |= (1 << FLASH_ACR_LATENCY_Pos); // Setting the timeout when reading from Flash
 
-    // Выбор PLL как основного источника тактирования.
+    // Selecting PLL as system clock.
     RCC->CFGR |= RCC_CFGR_SW_PLL;
 
     SystemCoreClockUpdate();

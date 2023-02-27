@@ -23,15 +23,15 @@
 int main(void)
 {
 	init_RCC();
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN; // Включаем разрешение тактирование порта GPIOB
-    GPIOB->MODER |= 1 << GPIO_MODER_MODER0_Pos; // Включаем General purpose output mode для PB0
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN; // Enable GPIOB port clock
+    GPIOB->MODER |= 1 << GPIO_MODER_MODER0_Pos; // Enable General purpose output mode for PB0
 
     /* Loop forever */
     for(;;)
     {
         for(int i = 0; i < 100000; i++);
-        /* Осуществляем сдвиг на заданную маску PB0 и "исключающем ИЛИ" меняем значения PB0
-         * ODR0 = 0, следовательно 0 ^ 1 = 1 и т.д.*/
+        /* Shift by a given mask PB0 change the values of PB0 by XOR operation
+         * ODR0 = 0, therefore 0 ^ 1 = 1 and etc*/
         GPIOB->ODR ^= 1 << GPIO_ODR_OD0_Pos;
     }
 }

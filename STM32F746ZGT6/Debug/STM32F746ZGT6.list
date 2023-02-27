@@ -88,13 +88,13 @@ int main(void)
  800020c:	af00      	add	r7, sp, #0
 	init_RCC();
  800020e:	f000 f823 	bl	8000258 <init_RCC>
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN; // Включаем разрешение тактирование порта GPIOB
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN; // Enable GPIOB port clock
  8000212:	4b0e      	ldr	r3, [pc, #56]	; (800024c <main+0x44>)
  8000214:	6b1b      	ldr	r3, [r3, #48]	; 0x30
  8000216:	4a0d      	ldr	r2, [pc, #52]	; (800024c <main+0x44>)
  8000218:	f043 0302 	orr.w	r3, r3, #2
  800021c:	6313      	str	r3, [r2, #48]	; 0x30
-    GPIOB->MODER |= 1 << GPIO_MODER_MODER0_Pos; // Включаем General purpose output mode для PB0
+    GPIOB->MODER |= 1 << GPIO_MODER_MODER0_Pos; // Enable General purpose output mode for PB0
  800021e:	4b0c      	ldr	r3, [pc, #48]	; (8000250 <main+0x48>)
  8000220:	681b      	ldr	r3, [r3, #0]
  8000222:	4a0b      	ldr	r2, [pc, #44]	; (8000250 <main+0x48>)
@@ -115,8 +115,8 @@ int main(void)
  8000238:	4a06      	ldr	r2, [pc, #24]	; (8000254 <main+0x4c>)
  800023a:	4293      	cmp	r3, r2
  800023c:	ddf8      	ble.n	8000230 <main+0x28>
-        /* Осуществляем сдвиг на заданную маску PB0 и "исключающем ИЛИ" меняем значения PB0
-         * ODR0 = 0, следовательно 0 ^ 1 = 1 и т.д.*/
+        /* Shift by a given mask PB0 change the values of PB0 by XOR operation
+         * ODR0 = 0, therefore 0 ^ 1 = 1 and etc*/
         GPIOB->ODR ^= 1 << GPIO_ODR_OD0_Pos;
  800023e:	4b04      	ldr	r3, [pc, #16]	; (8000250 <main+0x48>)
  8000240:	695b      	ldr	r3, [r3, #20]
@@ -139,54 +139,54 @@ void init_RCC(void)
  8000258:	b580      	push	{r7, lr}
  800025a:	b082      	sub	sp, #8
  800025c:	af00      	add	r7, sp, #0
-    // Сброс периферии.
-    RCC->AHB1RSTR = 0xFFFFFFFF; // Сброс
+    // Reset Peripherals.
+    RCC->AHB1RSTR = 0xFFFFFFFF; // Reset AHB1 Peripherals
  800025e:	4b35      	ldr	r3, [pc, #212]	; (8000334 <init_RCC+0xdc>)
  8000260:	f04f 32ff 	mov.w	r2, #4294967295
  8000264:	611a      	str	r2, [r3, #16]
-    RCC->AHB1RSTR = 0x00000000; // Установка
+    RCC->AHB1RSTR = 0x00000000; // Set AHB1 Peripherals
  8000266:	4b33      	ldr	r3, [pc, #204]	; (8000334 <init_RCC+0xdc>)
  8000268:	2200      	movs	r2, #0
  800026a:	611a      	str	r2, [r3, #16]
 
-    RCC->AHB2RSTR = 0xFFFFFFFF; // Сброс
+    RCC->AHB2RSTR = 0xFFFFFFFF; // Reset AHB2 Peripherals
  800026c:	4b31      	ldr	r3, [pc, #196]	; (8000334 <init_RCC+0xdc>)
  800026e:	f04f 32ff 	mov.w	r2, #4294967295
  8000272:	615a      	str	r2, [r3, #20]
-    RCC->AHB2RSTR = 0x00000000; // Установка
+    RCC->AHB2RSTR = 0x00000000; // Set AHB2 Peripherals
  8000274:	4b2f      	ldr	r3, [pc, #188]	; (8000334 <init_RCC+0xdc>)
  8000276:	2200      	movs	r2, #0
  8000278:	615a      	str	r2, [r3, #20]
 
-    RCC->APB1RSTR = 0xFFFFFFFF; // Сброс
+    RCC->APB1RSTR = 0xFFFFFFFF; // Reset APB1 Peripherals
  800027a:	4b2e      	ldr	r3, [pc, #184]	; (8000334 <init_RCC+0xdc>)
  800027c:	f04f 32ff 	mov.w	r2, #4294967295
  8000280:	621a      	str	r2, [r3, #32]
-    RCC->APB1RSTR = 0x00000000; // Установка
+    RCC->APB1RSTR = 0x00000000; // Set APB1 Peripherals
  8000282:	4b2c      	ldr	r3, [pc, #176]	; (8000334 <init_RCC+0xdc>)
  8000284:	2200      	movs	r2, #0
  8000286:	621a      	str	r2, [r3, #32]
 
-    RCC->APB2RSTR = 0xFFFFFFFF; // Сброс
+    RCC->APB2RSTR = 0xFFFFFFFF; // Reset APB2 Peripherals
  8000288:	4b2a      	ldr	r3, [pc, #168]	; (8000334 <init_RCC+0xdc>)
  800028a:	f04f 32ff 	mov.w	r2, #4294967295
  800028e:	625a      	str	r2, [r3, #36]	; 0x24
-    RCC->APB2RSTR = 0x00000000; // Установка
+    RCC->APB2RSTR = 0x00000000; // Set APB2 Peripherals
  8000290:	4b28      	ldr	r3, [pc, #160]	; (8000334 <init_RCC+0xdc>)
  8000292:	2200      	movs	r2, #0
  8000294:	625a      	str	r2, [r3, #36]	; 0x24
-    RCC->CR |= RCC_CR_HSEON; // Включение работы от внешнего генератора
-    while(!(RCC->CR & RCC_CR_HSERDY)); // Ожидание флага, что внешний генератор готов
+    RCC->CR |= RCC_CR_HSEON; // Enable HSE clock
+    while(!(RCC->CR & RCC_CR_HSERDY)); // Waiting for the flag that the BYPAS is ready
 */
 
-    // Включение внутреннего резонатора HSI
-    RCC->CR |= RCC_CR_HSION; // Включение работы от внутреннего резонатора
+    // Enable the internal resonator HSI
+    RCC->CR |= RCC_CR_HSION; // Enable HSI clock
  8000296:	4b27      	ldr	r3, [pc, #156]	; (8000334 <init_RCC+0xdc>)
  8000298:	681b      	ldr	r3, [r3, #0]
  800029a:	4a26      	ldr	r2, [pc, #152]	; (8000334 <init_RCC+0xdc>)
  800029c:	f043 0301 	orr.w	r3, r3, #1
  80002a0:	6013      	str	r3, [r2, #0]
-    while(!(RCC->CR & RCC_CR_HSIRDY)); // Ожидание флага, что внутренний резонатор готов
+    while(!(RCC->CR & RCC_CR_HSIRDY)); // Waiting for the flag that the HSI Clock is ready
  80002a2:	bf00      	nop
  80002a4:	4b23      	ldr	r3, [pc, #140]	; (8000334 <init_RCC+0xdc>)
  80002a6:	681b      	ldr	r3, [r3, #0]
@@ -194,14 +194,14 @@ void init_RCC(void)
  80002ac:	2b00      	cmp	r3, #0
  80002ae:	d0f9      	beq.n	80002a4 <init_RCC+0x4c>
 
-    // Выключение PLL.
-    RCC->CR &= ~RCC_CR_PLLON; // Выключение PLL
+    // Reset PLL.
+    RCC->CR &= ~RCC_CR_PLLON; // Reseting PLL
  80002b0:	4b20      	ldr	r3, [pc, #128]	; (8000334 <init_RCC+0xdc>)
  80002b2:	681b      	ldr	r3, [r3, #0]
  80002b4:	4a1f      	ldr	r2, [pc, #124]	; (8000334 <init_RCC+0xdc>)
  80002b6:	f023 7380 	bic.w	r3, r3, #16777216	; 0x1000000
  80002ba:	6013      	str	r3, [r2, #0]
-    while(RCC->CR & RCC_CR_PLLRDY); // Ожидание флага выключения PLL
+    while(RCC->CR & RCC_CR_PLLRDY); // Waiting for the flag PLLRDY that the PLL is unlocked
  80002bc:	bf00      	nop
  80002be:	4b1d      	ldr	r3, [pc, #116]	; (8000334 <init_RCC+0xdc>)
  80002c0:	681b      	ldr	r3, [r3, #0]
@@ -211,53 +211,53 @@ void init_RCC(void)
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV4 | RCC_CFGR_PPRE2_DIV2;
 */
 
-    // Настройка предделителей для шин тактирования периферии.
-    // 1: делим на 1(AHBCLK = 32 MГц), 2: делим на 1(APBCLK1 = 32 MГц), 3: делим на 1(APBCLK2 = 32 MГц)
+    // Setting up prescalers for peripheral clock buses.
+    // 1: divide by 1(AHBCLK = 32 MHz), 2: divide by 1(APBCLK1 = 32 MHz), 3: divide by 1(APBCLK2 = 32 MHz)
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE1_DIV1 | RCC_CFGR_PPRE2_DIV1;
  80002ca:	4b1a      	ldr	r3, [pc, #104]	; (8000334 <init_RCC+0xdc>)
  80002cc:	4a19      	ldr	r2, [pc, #100]	; (8000334 <init_RCC+0xdc>)
  80002ce:	689b      	ldr	r3, [r3, #8]
  80002d0:	6093      	str	r3, [r2, #8]
 
-    // Настройка предделителей PLL.
+    // Setting up prescalers of PLL.
     uint32_t pllcfgr = 0;
  80002d2:	2300      	movs	r3, #0
  80002d4:	607b      	str	r3, [r7, #4]
-    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 432 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
-    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Деление на 2 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+    pllcfgr |= 432 << RCC_PLLCFGR_PLLN_Pos; // Multiply by 432 for PLL(shift by the given mask, in this case multiplication by N)
+    pllcfgr |= 0 << RCC_PLLCFGR_PLLP_Pos; // Divide by 2 for PLL(shift by the given mask, in this case division by P), see Reference Manual
 */
 
-    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSI; // Внутренний резонатор используется для PLL
-    pllcfgr |= 8 << RCC_PLLCFGR_PLLM_Pos; // Деление на 8 для PLL(сдвиг на маску заданную, в данном случае деление на M)
+    pllcfgr |= RCC_PLLCFGR_PLLSRC_HSI; // Internal resonator used for PLL
+    pllcfgr |= 8 << RCC_PLLCFGR_PLLM_Pos; // Divide by 8 for PLL(shift by the given mask, in this case division by M)
  80002d6:	687b      	ldr	r3, [r7, #4]
  80002d8:	f043 0308 	orr.w	r3, r3, #8
  80002dc:	607b      	str	r3, [r7, #4]
-    pllcfgr |= 64 << RCC_PLLCFGR_PLLN_Pos; // Умножение на 64 для PLL(сдвиг на маску заданную, в данном случае умножение на N)
+    pllcfgr |= 64 << RCC_PLLCFGR_PLLN_Pos; // Multiply by 64 for PLL(shift by the given mask, in this case multiplication by N)
  80002de:	687b      	ldr	r3, [r7, #4]
  80002e0:	f443 5380 	orr.w	r3, r3, #4096	; 0x1000
  80002e4:	607b      	str	r3, [r7, #4]
-    pllcfgr |= 1 << RCC_PLLCFGR_PLLP_Pos; // Деление на 4 для PLL(сдвиг на маску заданную, в данном случае деление на P), смотри в Reference Manual
+    pllcfgr |= 1 << RCC_PLLCFGR_PLLP_Pos; // Divide by 4 for PLL(shift by the given mask, in this case division by P), see Reference Manual
  80002e6:	687b      	ldr	r3, [r7, #4]
  80002e8:	f443 3380 	orr.w	r3, r3, #65536	; 0x10000
  80002ec:	607b      	str	r3, [r7, #4]
 
 
-    /*Осуществляем запись в регистр конфигурации PLL не напрямую, так как заданное значение не равно нулю, данный регистр изанчально настроен
-     * на 16МГц [начальное значение не равно нулю(Reset value)], поэтому получится каша, если напрямую будем записывать значения делителей, для
-     * этого создали отдельную переменную, чтобы записать нужное значение в регистр конфигурации PLL */
-    RCC->PLLCFGR = pllcfgr; // Запись в регистр конфигурации PLL
+    /*We write to the PLL configuration register not directly, since the reset value is not equal to zero, this register is initially set
+     * to 16 MHz [the initial value is not equal to zero (Reset value)], so we get an incomprehensible value if we directly write the divisor
+     * values, for this we created a separate variable uint32_t pllcfgr to write the desired value to the PLL configuration register */
+    RCC->PLLCFGR = pllcfgr; // Writing to the PLL Configuration Register
  80002ee:	4a11      	ldr	r2, [pc, #68]	; (8000334 <init_RCC+0xdc>)
  80002f0:	687b      	ldr	r3, [r7, #4]
  80002f2:	6053      	str	r3, [r2, #4]
 
-    // Включение PLL.
-    RCC->CR |= RCC_CR_PLLON; // Включение PLL
+    // Enable PLL.
+    RCC->CR |= RCC_CR_PLLON; // Enable PLL
  80002f4:	4b0f      	ldr	r3, [pc, #60]	; (8000334 <init_RCC+0xdc>)
  80002f6:	681b      	ldr	r3, [r3, #0]
  80002f8:	4a0e      	ldr	r2, [pc, #56]	; (8000334 <init_RCC+0xdc>)
  80002fa:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
  80002fe:	6013      	str	r3, [r2, #0]
-    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
+    while(!(RCC->CR & RCC_CR_PLLRDY)); // Waiting for the flag PLLRDY that the PLL is locked
  8000300:	bf00      	nop
  8000302:	4b0c      	ldr	r3, [pc, #48]	; (8000334 <init_RCC+0xdc>)
  8000304:	681b      	ldr	r3, [r3, #0]
@@ -265,18 +265,18 @@ void init_RCC(void)
  800030a:	2b00      	cmp	r3, #0
  800030c:	d0f9      	beq.n	8000302 <init_RCC+0xaa>
 
-//    while(!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание флага включения PLL
+//    while(!(RCC->CR & RCC_CR_PLLRDY)); // Waiting for the flag PLLRDY that the PLL is locked
 */
 
-    // Настраиваем Latency на 1 для 32 МГц.
-    FLASH->ACR |= (1 << FLASH_ACR_LATENCY_Pos); // Настройка времени ожидания при чтении из Flash
+    // Setting Latency on 1 for 32 MHz.
+    FLASH->ACR |= (1 << FLASH_ACR_LATENCY_Pos); // Setting the timeout when reading from Flash
  800030e:	4b0a      	ldr	r3, [pc, #40]	; (8000338 <init_RCC+0xe0>)
  8000310:	681b      	ldr	r3, [r3, #0]
  8000312:	4a09      	ldr	r2, [pc, #36]	; (8000338 <init_RCC+0xe0>)
  8000314:	f043 0301 	orr.w	r3, r3, #1
  8000318:	6013      	str	r3, [r2, #0]
 
-    // Выбор PLL как основного источника тактирования.
+    // Selecting PLL as system clock.
     RCC->CFGR |= RCC_CFGR_SW_PLL;
  800031a:	4b06      	ldr	r3, [pc, #24]	; (8000334 <init_RCC+0xdc>)
  800031c:	689b      	ldr	r3, [r3, #8]
