@@ -544,11 +544,11 @@ LOAD d:/st/stm32cubeide_1.11.2/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x000000000001b7a2       0xd5 ./Src/rcc.o
  .debug_macro   0x000000000001b877       0xd7 ./Src/system_stm32f7xx.o
 
-.debug_line     0x0000000000000000      0xfec
+.debug_line     0x0000000000000000      0xfee
  .debug_line    0x0000000000000000      0x4d3 ./Src/main.o
- .debug_line    0x00000000000004d3      0x555 ./Src/rcc.o
- .debug_line    0x0000000000000a28      0x540 ./Src/system_stm32f7xx.o
- .debug_line    0x0000000000000f68       0x84 ./Startup/startup_stm32f746zgtx.o
+ .debug_line    0x00000000000004d3      0x557 ./Src/rcc.o
+ .debug_line    0x0000000000000a2a      0x540 ./Src/system_stm32f7xx.o
+ .debug_line    0x0000000000000f6a       0x84 ./Startup/startup_stm32f746zgtx.o
 
 .debug_str      0x0000000000000000    0x9b23b
  .debug_str     0x0000000000000000    0x9afeb ./Src/main.o

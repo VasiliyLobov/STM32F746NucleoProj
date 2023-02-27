@@ -1,6 +1,25 @@
-/* In this file, you can configure the MCU HCLK clock from both the internal resonator and the external generator, you only
- * need to comment out some lines, and uncomment others*/
-// See the stm32f476xx.h file for RCC and PLL tuning, and STM32CubeMX as it conveniently depicts the PLL tuning structure
+/**
+ ******************************************************************************
+ * @file           : rcc.c
+ * @author         : Vasiliy Lobov
+ * @brief          : RCC clock setting
+ ******************************************************************************
+ *
+ * In this file you can set frequency of MCU at 16, 32 and 216 MHz and configure the HCLK clock from both
+ * the internal resonator and the external generator, you only need to comment out some lines, and uncomment others
+ *
+ * For MCU working at 16 MHz you need to uncomment next lines: 43, 45.
+ *
+ * For MCU working at 32 MHz you need to uncomment lines: 60-61, 75, 86-89, 123;
+ * and comment lines: 49, 54-56, 70, 80-83, 106-110, 117, 119;
+ *
+ * For MCU working at 216 MHz you need to uncomment lines: 49, 54-56, 70, 80-83, 106-110, 117, 119;
+ * and comment lines: 60-61, 75, 86-89, 123;
+ *
+ * See the stm32f476xx.h file for RCC and PLL setting, and STM32CubeMX as it conveniently depicts the PLL setting structure
+ *
+ ******************************************************************************
+ */
 #include "stm32f7xx.h"
 
 #include "rcc.h"
