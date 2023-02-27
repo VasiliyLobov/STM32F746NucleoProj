@@ -18,12 +18,14 @@
 #include <stdint.h>
 #include "stm32f7xx.h"
 #include "rcc.h"
+#include "gpio.h"
+#include "timer.h"
 
 int main(void)
 {
 	init_RCC();
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN; // Enable GPIOB port clock
-    GPIOB->MODER |= 1 << GPIO_MODER_MODER0_Pos; // Enable General purpose output mode for PB0
+    init_GPIO();
+    init_TIM8();
 
     /* Loop forever */
     for(;;)
