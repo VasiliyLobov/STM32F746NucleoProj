@@ -8,10 +8,14 @@ void init_TIM8(void)
 	TIM8->PSC |= 0; // The counter clock frequency (CK_CNT) is equal to fCK_PSC / (PSC[15:0] + 1)
 	/* Set the auto reload register to 1080 count, therefore we'll get frequency at 100 MHz
 	 * we write 1080, because we doing PWM in center-aligned mode 2(triangle), therefore value 1080 is multiplied by 2*/
-	TIM8->ARR |= 1080; // For TIM8 working at frequency 100 MHz we need to write in ARR value equal to 1080(216MHz/(1080*2)=100MHz)
+	TIM8->ARR |= 1080 - 1; // For TIM8 working at frequency 100 MHz we need to write in ARR value equal to 1080(216MHz/(1080*2)=100MHz)
 	/* Set CMS1 in center-aligned mode 2 in channel 1 of TIM8 in timer control register 1
 	 * 10: Center-aligned mode 2. The counter counts up and down alternatively.
 	 * */
+	/* We need to write value in capture/compare register 1 from 1 to 99% value of ARR register for comparing values
+	 * between CCR1 and ARR to form PWM. Number 1 means channel of TIM8
+	 * */
+	TIM8->CCR1 = TIM8->ARR / 2;
 	TIM8->CR1 |= TIM_CR1_CMS_1; // Center-aligned mode 2 selection
 	// Set compare output enable of channel 1 in TIM8 capture/compare enable register
 	TIM8->CCER |= TIM_CCER_CC1E; // Enable Compare output at channel 1
